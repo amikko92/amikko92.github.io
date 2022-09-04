@@ -1,0 +1,26 @@
+{
+    "env": {
+        "node": true,
+        "vue/setup-compiler-macros": true
+    },
+    "plugins": ["@typescript-eslint"],
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:vue/vue3-recommended",
+        "prettier"
+    ],
+    "parser": "vue-eslint-parser",
+    "parserOptions": {
+        "parser": "@typescript-eslint/parser",
+        "sourceType": "module"
+    },
+    "rules": {
+        "vue/no-unused-vars": "warn",
+        "@typescript-eslint/no-explicit-any": [
+            "warn",
+            { "ignoreRestArgs": true }
+        ]
+    }
+}
