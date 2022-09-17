@@ -4,5 +4,5 @@ import { BabylonCanvas, HelloWorld } from "./components";
 
 <template>
     <BabylonCanvas />
-    <HelloWorld />
+    <HelloWorld name="Andreas Mikko" />
 </template>

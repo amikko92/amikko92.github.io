@@ -1,6 +1,12 @@
+<script setup lang="ts">
+defineProps<{
+    name: string;
+}>();
+</script>
+
 <template>
     <div class="main">
-        <h1>Andreas Mikko</h1>
+        <h1>{{ $props.name }}</h1>
         <p>This site is under construction.</p>
         <p>
             In the meanwhile visit my
