@@ -26,6 +26,8 @@ export class BabylonApp {
         });
 
         this.scene = new Scene(this.engine);
+        this.initDebug(this.scene);
+
         this.camera = new UniversalCamera(
             "camera",
             new Vector3(0, 0, -5),
@@ -45,6 +47,13 @@ export class BabylonApp {
         this.box.position = new Vector3(0, 0, 0);
 
         this.engine.runRenderLoop(this.render.bind(this));
+    }
+
+    private async initDebug(scene: Scene) {
+        if (import.meta.env.DEV) {
+            const babylonDebug = await import("./BabylonDebug");
+            babylonDebug.initDebug(scene);
+        }
     }
 
     private render(): void {
