@@ -7,6 +7,8 @@ import {
     SceneLoader,
     ISceneLoaderAsyncResult,
     TransformNode,
+    Mesh,
+    Quaternion,
 } from "@babylonjs/core";
 import "@babylonjs/loaders/glTF";
 
@@ -45,8 +47,8 @@ export class BabylonApp {
     }
 
     private async setupScene(): Promise<void> {
-        const { transformNodes } = await this.loadAssets();
-        this.setupIslands(transformNodes[0]);
+        const { meshes } = await this.loadAssets();
+        this.setupIslands(meshes as Mesh[]);
 
         const camera = new UniversalCamera(
             "camera",
@@ -66,23 +68,37 @@ export class BabylonApp {
         this.engine.runRenderLoop(this.render.bind(this));
     }
 
-    private setupIslands(islandNode: TransformNode): void {
-        islandNode.name = "island0";
-        islandNode.position.x = 7;
-        this.islands.push(islandNode);
+    private setupIslands(meshes: Mesh[]): void {
+        const sourceMeshes = meshes.filter((mesh) => mesh.geometry !== null);
+        sourceMeshes.forEach((mesh) => {
+            mesh.setParent(null);
+            mesh.isVisible = false;
+        });
 
-        const island1 = islandNode.clone("island1", this.scene.rootNodes[0]);
-        if (island1) {
-            island1.position.x = -7;
-            island1.addRotation(0, Math.PI, 0);
-            this.islands.push(island1);
+        for (let i = 0; i < 10; i++) {
+            const node = new TransformNode(`island${i}`);
+            sourceMeshes.forEach((mesh) => {
+                mesh.setParent(null);
+                const instance = mesh.createInstance(
+                    `${mesh.name}_instance${i}`
+                );
+                instance.setParent(node);
+            });
+
+            const rot = Quaternion.FromEulerAngles(0, 36 * i, 0);
+            const vec = new Vector3();
+            Vector3.Forward().rotateByQuaternionToRef(rot, vec);
+            vec.scaleInPlace(10);
+            node.position = vec;
+
+            this.islands.push(node);
         }
     }
 
     private render(): void {
         const dt = this.scene.deltaTime ? this.scene.deltaTime : 0;
         this.islands.forEach((island) => {
-            island.rotate(Vector3.Up(), 0.0001 * dt);
+            island.rotateAround(Vector3.Zero(), Vector3.Up(), 0.0001 * dt);
         });
         this.scene.render();
     }
