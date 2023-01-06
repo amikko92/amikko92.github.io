@@ -20,19 +20,29 @@ export class BabylonApp {
 
     private islands: TransformNode[];
 
+    private onResize: () => void;
+
     constructor(canvas: HTMLCanvasElement) {
         this.canvas = canvas;
         this.engine = new Engine(this.canvas, true);
         this.islands = [];
 
-        window.addEventListener("resize", () => {
-            this.engine.resize();
-        });
+        this.onResize = this.resize.bind(this);
+        window.addEventListener("resize", this.onResize);
 
         this.scene = new Scene(this.engine);
         this.initDebug(this.scene);
 
         this.setupScene();
+    }
+
+    public dispose(): void {
+        window.removeEventListener("resize", this.onResize);
+        this.engine.dispose();
+    }
+
+    public resize(): void {
+        this.engine.resize();
     }
 
     private async initDebug(scene: Scene): Promise<void> {
