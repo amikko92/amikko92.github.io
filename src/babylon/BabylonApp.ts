@@ -9,6 +9,8 @@ import {
     TransformNode,
     Mesh,
     Quaternion,
+    DirectionalLight,
+    ShadowGenerator,
 } from "@babylonjs/core";
 import "@babylonjs/loaders/glTF";
 
@@ -75,6 +77,18 @@ export class BabylonApp {
         );
         hemiLight.intensity = 1;
 
+        const dirLight = new DirectionalLight(
+            "dir_light",
+            new Vector3(1, -1, 0),
+            this.scene
+        );
+        dirLight.position = new Vector3(0, 20, 0);
+        dirLight.intensity = 3;
+
+        const shadowGenerator = new ShadowGenerator(1024, dirLight);
+        shadowGenerator.usePoissonSampling = true;
+        shadowGenerator.getShadowMap()?.renderList?.push(...this.scene.meshes);
+
         this.engine.runRenderLoop(this.render.bind(this));
     }
 
@@ -83,6 +97,7 @@ export class BabylonApp {
         sourceMeshes.forEach((mesh) => {
             mesh.setParent(null);
             mesh.isVisible = false;
+            mesh.receiveShadows = true;
         });
 
         for (let i = 0; i < 10; i++) {
