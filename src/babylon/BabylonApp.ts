@@ -120,14 +120,15 @@ export class BabylonApp {
     }
 
     private setupOcean(): void {
-        const oceanPlane = MeshBuilder.CreatePlane(
-            "ocean_plane",
+        const ocean = MeshBuilder.CreateGround(
+            "ocean",
             {
-                size: 100,
+                width: 100,
+                height: 100,
+                subdivisions: 10,
             },
             this.scene
         );
-        oceanPlane.rotation.x = (90 * Math.PI) / 180;
 
         const oceanMaterial = new StandardMaterial(
             "ocean_material",
@@ -140,7 +141,7 @@ export class BabylonApp {
             this.waterTexture.vScale = 5;
             oceanMaterial.emissiveTexture = this.waterTexture;
         }
-        oceanPlane.material = oceanMaterial;
+        ocean.material = oceanMaterial;
     }
 
     private setupIslands(): void {
