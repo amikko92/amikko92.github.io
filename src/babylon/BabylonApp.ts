@@ -4,13 +4,17 @@ import {
     Vector3,
     HemisphericLight,
     UniversalCamera,
-    SceneLoader,
-    ISceneLoaderAsyncResult,
     TransformNode,
     Mesh,
     Quaternion,
     DirectionalLight,
     ShadowGenerator,
+    MeshBuilder,
+    StandardMaterial,
+    AssetsManager,
+    TextureAssetTask,
+    Texture,
+    MeshAssetTask,
 } from "@babylonjs/core";
 import "@babylonjs/loaders/glTF";
 
@@ -20,6 +24,8 @@ export class BabylonApp {
     private engine: Engine;
     private scene: Scene;
 
+    private waterTexture?: Texture;
+    private islandMeshes?: Mesh[];
     private islands: TransformNode[];
 
     private onResize: () => void;
@@ -54,13 +60,34 @@ export class BabylonApp {
         }
     }
 
-    private async loadAssets(): Promise<ISceneLoaderAsyncResult> {
-        return await SceneLoader.ImportMeshAsync("", "./", "island.glb");
+    private async loadAssets(): Promise<void> {
+        const assetsManager = new AssetsManager(this.scene);
+
+        const waterTask = assetsManager.addTextureTask(
+            "water_task",
+            "water.png"
+        );
+        waterTask.onSuccess = (task: TextureAssetTask) => {
+            this.waterTexture = task.texture;
+        };
+
+        const islandTask = assetsManager.addMeshTask(
+            "island_task",
+            "",
+            "./",
+            "island.glb"
+        );
+        islandTask.onSuccess = (task: MeshAssetTask) => {
+            this.islandMeshes = task.loadedMeshes as Mesh[];
+        };
+
+        await assetsManager.loadAsync();
     }
 
     private async setupScene(): Promise<void> {
-        const { meshes } = await this.loadAssets();
-        this.setupIslands(meshes as Mesh[]);
+        await this.loadAssets();
+        this.setupOcean();
+        this.setupIslands();
 
         const camera = new UniversalCamera(
             "camera",
@@ -92,8 +119,37 @@ export class BabylonApp {
         this.engine.runRenderLoop(this.render.bind(this));
     }
 
-    private setupIslands(meshes: Mesh[]): void {
-        const sourceMeshes = meshes.filter((mesh) => mesh.geometry !== null);
+    private setupOcean(): void {
+        const oceanPlane = MeshBuilder.CreatePlane(
+            "ocean_plane",
+            {
+                size: 100,
+            },
+            this.scene
+        );
+        oceanPlane.rotation.x = (90 * Math.PI) / 180;
+
+        const oceanMaterial = new StandardMaterial(
+            "ocean_material",
+            this.scene
+        );
+        oceanMaterial.disableLighting = true;
+        oceanMaterial.backFaceCulling = true;
+        if (this.waterTexture) {
+            this.waterTexture.uScale = 5;
+            this.waterTexture.vScale = 5;
+            oceanMaterial.emissiveTexture = this.waterTexture;
+        }
+        oceanPlane.material = oceanMaterial;
+    }
+
+    private setupIslands(): void {
+        if (!this.islandMeshes) {
+            throw new Error("Island meshes not loaded");
+        }
+        const sourceMeshes = this.islandMeshes.filter(
+            (mesh) => mesh.geometry !== null
+        );
         sourceMeshes.forEach((mesh) => {
             mesh.setParent(null);
             mesh.isVisible = false;
@@ -121,9 +177,13 @@ export class BabylonApp {
     }
 
     private render(): void {
-        const dt = this.scene.deltaTime ? this.scene.deltaTime : 0;
+        const dt = this.scene.deltaTime ? this.scene.deltaTime * 0.001 : 0;
+        if (this.waterTexture) {
+            this.waterTexture.uOffset += dt * 0.1;
+            this.waterTexture.vOffset += dt * 0.1;
+        }
         this.islands.forEach((island) => {
-            island.rotateAround(Vector3.Zero(), Vector3.Up(), 0.0001 * dt);
+            island.rotateAround(Vector3.Zero(), Vector3.Up(), 0.1 * dt);
         });
         this.scene.render();
     }
