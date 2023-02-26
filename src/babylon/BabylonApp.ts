@@ -15,6 +15,8 @@ import {
     TextureAssetTask,
     Texture,
     MeshAssetTask,
+    ShaderMaterial,
+    Vector2,
 } from "@babylonjs/core";
 import "@babylonjs/loaders/glTF";
 
@@ -25,6 +27,9 @@ export class BabylonApp {
     private scene: Scene;
 
     private waterTexture?: Texture;
+    private oceanMaterial?: ShaderMaterial;
+    private waterOffset: Vector2;
+
     private islandMeshes?: Mesh[];
     private islands: TransformNode[];
 
@@ -34,6 +39,7 @@ export class BabylonApp {
         this.canvas = canvas;
         this.engine = new Engine(this.canvas, true);
         this.islands = [];
+        this.waterOffset = new Vector2();
 
         this.onResize = this.resize.bind(this);
         window.addEventListener("resize", this.onResize);
@@ -130,18 +136,21 @@ export class BabylonApp {
             this.scene
         );
 
-        const oceanMaterial = new StandardMaterial(
-            "ocean_material",
-            this.scene
+        this.oceanMaterial = new ShaderMaterial(
+            "ocean_shader",
+            this.scene,
+            "./ocean",
+            {
+                attributes: ["position", "uv"],
+                uniforms: ["worldViewProjection", "textureSampler", "offset"],
+            }
         );
-        oceanMaterial.disableLighting = true;
-        oceanMaterial.backFaceCulling = true;
+        this.oceanMaterial.backFaceCulling = false;
         if (this.waterTexture) {
-            this.waterTexture.uScale = 5;
-            this.waterTexture.vScale = 5;
-            oceanMaterial.emissiveTexture = this.waterTexture;
+            this.oceanMaterial.setTexture("textureSampler", this.waterTexture);
+            this.oceanMaterial.setVector2("offset", this.waterOffset);
         }
-        ocean.material = oceanMaterial;
+        ocean.material = this.oceanMaterial;
     }
 
     private setupIslands(): void {
@@ -179,9 +188,10 @@ export class BabylonApp {
 
     private render(): void {
         const dt = this.scene.deltaTime ? this.scene.deltaTime * 0.001 : 0;
-        if (this.waterTexture) {
-            this.waterTexture.uOffset += dt * 0.1;
-            this.waterTexture.vOffset += dt * 0.1;
+
+        if (this.oceanMaterial) {
+            this.waterOffset.x += dt * 0.1;
+            this.waterOffset.y += dt * 0.1;
         }
         this.islands.forEach((island) => {
             island.rotateAround(Vector3.Zero(), Vector3.Up(), 0.1 * dt);
