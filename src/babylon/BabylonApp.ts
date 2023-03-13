@@ -10,7 +10,6 @@ import {
     DirectionalLight,
     ShadowGenerator,
     MeshBuilder,
-    StandardMaterial,
     AssetsManager,
     TextureAssetTask,
     Texture,
@@ -71,7 +70,7 @@ export class BabylonApp {
 
         const waterTask = assetsManager.addTextureTask(
             "water_task",
-            "water.png"
+            "textures/water-low.png"
         );
         waterTask.onSuccess = (task: TextureAssetTask) => {
             this.waterTexture = task.texture;
@@ -119,7 +118,7 @@ export class BabylonApp {
         dirLight.intensity = 3;
 
         const shadowGenerator = new ShadowGenerator(1024, dirLight);
-        shadowGenerator.usePoissonSampling = true;
+        shadowGenerator.usePoissonSampling = false;
         shadowGenerator.getShadowMap()?.renderList?.push(...this.scene.meshes);
 
         this.engine.runRenderLoop(this.render.bind(this));
@@ -142,13 +141,19 @@ export class BabylonApp {
             "./ocean",
             {
                 attributes: ["position", "uv"],
-                uniforms: ["worldViewProjection", "textureSampler", "offset"],
+                uniforms: [
+                    "worldViewProjection",
+                    "textureSampler",
+                    "offset",
+                    "uvScale",
+                ],
             }
         );
         this.oceanMaterial.backFaceCulling = false;
         if (this.waterTexture) {
             this.oceanMaterial.setTexture("textureSampler", this.waterTexture);
             this.oceanMaterial.setVector2("offset", this.waterOffset);
+            this.oceanMaterial.setFloat("uvScale", 2);
         }
         ocean.material = this.oceanMaterial;
     }
