@@ -26,8 +26,10 @@ export class BabylonApp {
     private scene: Scene;
 
     private waterTexture?: Texture;
+    private noiseTexture?: Texture;
     private oceanMaterial?: ShaderMaterial;
     private waterOffset: Vector2;
+    private noiseOffset: Vector2;
 
     private islandMeshes?: Mesh[];
     private islands: TransformNode[];
@@ -39,6 +41,7 @@ export class BabylonApp {
         this.engine = new Engine(this.canvas, true);
         this.islands = [];
         this.waterOffset = new Vector2();
+        this.noiseOffset = new Vector2();
 
         this.onResize = this.resize.bind(this);
         window.addEventListener("resize", this.onResize);
@@ -74,6 +77,14 @@ export class BabylonApp {
         );
         waterTask.onSuccess = (task: TextureAssetTask) => {
             this.waterTexture = task.texture;
+        };
+
+        const noiseTask = assetsManager.addTextureTask(
+            "noise_task",
+            "textures/noiseTexture.png"
+        );
+        noiseTask.onSuccess = (task: TextureAssetTask) => {
+            this.noiseTexture = task.texture;
         };
 
         const islandTask = assetsManager.addMeshTask(
@@ -146,14 +157,21 @@ export class BabylonApp {
                     "textureSampler",
                     "offset",
                     "uvScale",
+                    "noiseSampler",
+                    "noiseOffset",
+                    "noiseUvScale",
                 ],
             }
         );
         this.oceanMaterial.backFaceCulling = false;
-        if (this.waterTexture) {
+        if (this.waterTexture && this.noiseTexture) {
             this.oceanMaterial.setTexture("textureSampler", this.waterTexture);
             this.oceanMaterial.setVector2("offset", this.waterOffset);
             this.oceanMaterial.setFloat("uvScale", 2);
+
+            this.oceanMaterial.setTexture("noiseSampler", this.noiseTexture);
+            this.oceanMaterial.setVector2("noiseOffset", this.noiseOffset);
+            this.oceanMaterial.setFloat("noiseUvScale", 2.5);
         }
         ocean.material = this.oceanMaterial;
     }
@@ -197,6 +215,8 @@ export class BabylonApp {
         if (this.oceanMaterial) {
             this.waterOffset.x += dt * 0.1;
             this.waterOffset.y += dt * 0.1;
+            this.noiseOffset.x += dt * -0.1;
+            this.noiseOffset.y += dt * 0.1;
         }
         this.islands.forEach((island) => {
             island.rotateAround(Vector3.Zero(), Vector3.Up(), 0.1 * dt);
