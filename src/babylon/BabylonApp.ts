@@ -9,13 +9,11 @@ import {
     Quaternion,
     DirectionalLight,
     ShadowGenerator,
-    MeshBuilder,
-    Texture,
-    ShaderMaterial,
-    Vector2,
 } from "@babylonjs/core";
 import "@babylonjs/loaders/glTF";
 import { loadAssets } from "./AssetLoader";
+import { Entity } from "./Entity";
+import { Ocean } from "./Ocean";
 
 export class BabylonApp {
     private readonly canvas: HTMLCanvasElement;
@@ -23,11 +21,7 @@ export class BabylonApp {
     private engine: Engine;
     private scene: Scene;
 
-    private oceanMaterial?: ShaderMaterial;
-    private waterOffset: Vector2;
-    private noiseOffset: Vector2;
-
-    private islandMeshes?: Mesh[];
+    private entities: Entity[];
     private islands: TransformNode[];
 
     private onResize: () => void;
@@ -35,9 +29,8 @@ export class BabylonApp {
     constructor(canvas: HTMLCanvasElement) {
         this.canvas = canvas;
         this.engine = new Engine(this.canvas, true);
+        this.entities = [];
         this.islands = [];
-        this.waterOffset = new Vector2();
-        this.noiseOffset = new Vector2();
 
         this.onResize = this.resize.bind(this);
         window.addEventListener("resize", this.onResize);
@@ -64,9 +57,11 @@ export class BabylonApp {
     }
 
     public async setupScene(): Promise<void> {
-        const assets = await loadAssets(this.scene);
-        this.setupOcean(assets.textures.water, assets.textures.noise);
-        this.setupIslands(assets.meshes.island);
+        const { textures, meshes } = await loadAssets(this.scene);
+
+        const ocean = new Ocean(this.scene, textures.water, textures.noise);
+        this.entities.push(ocean);
+        this.setupIslands(meshes.island);
 
         const camera = new UniversalCamera(
             "camera",
@@ -96,46 +91,6 @@ export class BabylonApp {
         shadowGenerator.getShadowMap()?.renderList?.push(...this.scene.meshes);
 
         this.engine.runRenderLoop(this.render.bind(this));
-    }
-
-    private setupOcean(waterTexture: Texture, noiseTexture: Texture): void {
-        const ocean = MeshBuilder.CreateGround(
-            "ocean",
-            {
-                width: 100,
-                height: 100,
-                subdivisions: 10,
-            },
-            this.scene
-        );
-
-        this.oceanMaterial = new ShaderMaterial(
-            "ocean_shader",
-            this.scene,
-            "./ocean",
-            {
-                attributes: ["position", "uv"],
-                uniforms: [
-                    "worldViewProjection",
-                    "textureSampler",
-                    "offset",
-                    "uvScale",
-                    "noiseSampler",
-                    "noiseOffset",
-                    "noiseUvScale",
-                ],
-            }
-        );
-        this.oceanMaterial.backFaceCulling = false;
-        this.oceanMaterial.setTexture("textureSampler", waterTexture);
-        this.oceanMaterial.setVector2("offset", this.waterOffset);
-        this.oceanMaterial.setFloat("uvScale", 2);
-
-        this.oceanMaterial.setTexture("noiseSampler", noiseTexture);
-        this.oceanMaterial.setVector2("noiseOffset", this.noiseOffset);
-        this.oceanMaterial.setFloat("noiseUvScale", 2.5);
-
-        ocean.material = this.oceanMaterial;
     }
 
     private setupIslands(islandMeshes: Mesh[]): void {
@@ -169,16 +124,15 @@ export class BabylonApp {
     }
 
     private render(): void {
-        const dt = this.scene.deltaTime ? this.scene.deltaTime * 0.001 : 0;
+        const deltaTime = this.scene.deltaTime
+            ? this.scene.deltaTime * 0.001
+            : 0;
 
-        if (this.oceanMaterial) {
-            this.waterOffset.x += dt * 0.1;
-            this.waterOffset.y += dt * 0.1;
-            this.noiseOffset.x += dt * -0.1;
-            this.noiseOffset.y += dt * 0.1;
+        for (const entity of this.entities) {
+            entity.update(deltaTime);
         }
         this.islands.forEach((island) => {
-            island.rotateAround(Vector3.Zero(), Vector3.Up(), 0.1 * dt);
+            island.rotateAround(Vector3.Zero(), Vector3.Up(), 0.1 * deltaTime);
         });
         this.scene.render();
     }
