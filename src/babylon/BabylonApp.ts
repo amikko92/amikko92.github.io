@@ -10,14 +10,12 @@ import {
     DirectionalLight,
     ShadowGenerator,
     MeshBuilder,
-    AssetsManager,
-    TextureAssetTask,
     Texture,
-    MeshAssetTask,
     ShaderMaterial,
     Vector2,
 } from "@babylonjs/core";
 import "@babylonjs/loaders/glTF";
+import { loadAssets } from "./AssetLoader";
 
 export class BabylonApp {
     private readonly canvas: HTMLCanvasElement;
@@ -25,8 +23,6 @@ export class BabylonApp {
     private engine: Engine;
     private scene: Scene;
 
-    private waterTexture?: Texture;
-    private noiseTexture?: Texture;
     private oceanMaterial?: ShaderMaterial;
     private waterOffset: Vector2;
     private noiseOffset: Vector2;
@@ -48,7 +44,6 @@ export class BabylonApp {
 
         this.scene = new Scene(this.engine);
         this.initDebug(this.scene);
-
         this.setupScene();
     }
 
@@ -68,42 +63,10 @@ export class BabylonApp {
         }
     }
 
-    private async loadAssets(): Promise<void> {
-        const assetsManager = new AssetsManager(this.scene);
-
-        const waterTask = assetsManager.addTextureTask(
-            "water_task",
-            "textures/water-low.png"
-        );
-        waterTask.onSuccess = (task: TextureAssetTask) => {
-            this.waterTexture = task.texture;
-        };
-
-        const noiseTask = assetsManager.addTextureTask(
-            "noise_task",
-            "textures/noiseTexture.png"
-        );
-        noiseTask.onSuccess = (task: TextureAssetTask) => {
-            this.noiseTexture = task.texture;
-        };
-
-        const islandTask = assetsManager.addMeshTask(
-            "island_task",
-            "",
-            "./",
-            "island.glb"
-        );
-        islandTask.onSuccess = (task: MeshAssetTask) => {
-            this.islandMeshes = task.loadedMeshes as Mesh[];
-        };
-
-        await assetsManager.loadAsync();
-    }
-
-    private async setupScene(): Promise<void> {
-        await this.loadAssets();
-        this.setupOcean();
-        this.setupIslands();
+    public async setupScene(): Promise<void> {
+        const assets = await loadAssets(this.scene);
+        this.setupOcean(assets.textures.water, assets.textures.noise);
+        this.setupIslands(assets.meshes.island);
 
         const camera = new UniversalCamera(
             "camera",
@@ -135,7 +98,7 @@ export class BabylonApp {
         this.engine.runRenderLoop(this.render.bind(this));
     }
 
-    private setupOcean(): void {
+    private setupOcean(waterTexture: Texture, noiseTexture: Texture): void {
         const ocean = MeshBuilder.CreateGround(
             "ocean",
             {
@@ -164,23 +127,19 @@ export class BabylonApp {
             }
         );
         this.oceanMaterial.backFaceCulling = false;
-        if (this.waterTexture && this.noiseTexture) {
-            this.oceanMaterial.setTexture("textureSampler", this.waterTexture);
-            this.oceanMaterial.setVector2("offset", this.waterOffset);
-            this.oceanMaterial.setFloat("uvScale", 2);
+        this.oceanMaterial.setTexture("textureSampler", waterTexture);
+        this.oceanMaterial.setVector2("offset", this.waterOffset);
+        this.oceanMaterial.setFloat("uvScale", 2);
 
-            this.oceanMaterial.setTexture("noiseSampler", this.noiseTexture);
-            this.oceanMaterial.setVector2("noiseOffset", this.noiseOffset);
-            this.oceanMaterial.setFloat("noiseUvScale", 2.5);
-        }
+        this.oceanMaterial.setTexture("noiseSampler", noiseTexture);
+        this.oceanMaterial.setVector2("noiseOffset", this.noiseOffset);
+        this.oceanMaterial.setFloat("noiseUvScale", 2.5);
+
         ocean.material = this.oceanMaterial;
     }
 
-    private setupIslands(): void {
-        if (!this.islandMeshes) {
-            throw new Error("Island meshes not loaded");
-        }
-        const sourceMeshes = this.islandMeshes.filter(
+    private setupIslands(islandMeshes: Mesh[]): void {
+        const sourceMeshes = islandMeshes.filter(
             (mesh) => mesh.geometry !== null
         );
         sourceMeshes.forEach((mesh) => {
