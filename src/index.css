@@ -1,0 +1,25 @@
+:root {
+    color: white;
+    background-color: black;
+}
+
+h1 {
+    font-family: "Press Start 2P", cursive;
+    font-size: 5rem;
+}
+
+a:link {
+    color: pink;
+}
+
+a:hover {
+    color: hotpink;
+}
+
+a:active {
+    color: red;
+}
+
+a:visited {
+    color: pink;
+}
