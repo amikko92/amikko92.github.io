@@ -1,25 +1,57 @@
 :root {
-    color: white;
-    background-color: black;
+    --primary-color: rgb(0, 110, 255);
+    --primary-light-color: rgb(45, 136, 255);
+    --primary-dark-color: rgb(0, 87, 201);
+    --text-color: rgb(75, 75, 75);
+
+    color: var(--text-color);
+    background-color: white;
+}
+
+header {
+    color: rgb(241, 241, 241);
+    background-color: rgb(0, 110, 255);
 }
 
 h1 {
     font-family: "Press Start 2P", cursive;
-    font-size: 5rem;
+    font-size: 3rem;
+    padding: 0.2em;
+    padding-bottom: 0;
+}
+
+p {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.2em;
+    line-height: 1.5;
+}
+
+#sub-title {
+    font-family: "Press Start 2P", cursive;
+    padding: 0.2em;
+    padding-top: 0;
+}
+
+a {
+    text-decoration: none;
 }
 
 a:link {
-    color: pink;
-}
-
-a:hover {
-    color: hotpink;
-}
-
-a:active {
-    color: red;
+    color: var(--primary-color);
 }
 
 a:visited {
-    color: pink;
+    color: var(--primary-color);
+}
+
+a:hover {
+    color: var(--primary-light-color);
+}
+
+a:active {
+    color: var(--primary-dark-color);
+}
+
+img {
+    max-width: 100%;
 }
