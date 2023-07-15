@@ -54,11 +54,11 @@ a {
     font-weight: bold;
 }
 
+/** Primary colored links **/
 a:link {
     color: var(--primary-color);
 }
 
-/** Dark colored links */
 a:visited {
     color: var(--primary-color);
 }
@@ -71,20 +71,20 @@ a:active {
     color: var(--primary-dark-color);
 }
 
-/** Secondary colored links */
-a.secondary:link {
+/** Color section links */
+.color-section a:link {
     color: var(--secondary-color);
 }
 
-a.secondary:visited {
+.color-section a:visited {
     color: var(--secondary-color);
 }
 
-a.secondary:hover {
+.color-section a:hover {
     color: var(--secondary-light-color);
 }
 
-a.secondary:active {
+.color-section a:active {
     color: var(--secondary-dark-color);
 }
 
