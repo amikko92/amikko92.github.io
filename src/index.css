@@ -8,6 +8,7 @@
     --text-color: rgb(75, 75, 75);
 
     text-align: center;
+    box-sizing: border-box;
 }
 
 body {
@@ -135,4 +136,37 @@ iframe {
 .divider {
     background-color: var(--primary-dark-color);
     height: 3px;
+}
+
+.card {
+    max-width: 250px;
+    padding: 0.3rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 99, 230, 0.4);
+    transition: 0.2s;
+}
+
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 99, 230, 0.6);
+}
+
+.card:active {
+    box-shadow: 0 2px 4px 0 rgba(0, 99, 230, 0.6);
+}
+
+.card-img {
+    object-fit: none;
+    border-radius: 10px;
+}
+
+.card-name {
+    font-family: "Chakra Petch", sans-serif;
+}
+
+.card-container {
+    display: grid;
+    max-width: min(100%, 752px);
+    gap: 1rem;
+    margin: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
