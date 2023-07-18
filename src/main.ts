@@ -1,3 +1,3 @@
-import { helloWorld } from "./helloWorld";
+import { Card } from "./components/card";
 
-helloWorld();
+customElements.define("card-component", Card);
