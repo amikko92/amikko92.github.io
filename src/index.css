@@ -38,9 +38,9 @@ address {
 }
 
 h1 {
-    font-family: "Press Start 2P", cursive;
-    font-size: min(3rem, 12vw);
-    text-shadow: 4px 4px var(--primary-dark-color);
+    font-family: "Chakra Petch", sans-serif;
+    color: var(--text-color);
+    font-size: 1.4em;
 }
 
 p {
@@ -125,6 +125,13 @@ iframe {
     height: 100vh;
     min-height: 200px;
     padding: 0.3em;
+}
+
+.hero-title {
+    font-family: "Press Start 2P", cursive;
+    color: white;
+    font-size: min(3rem, 12vw);
+    text-shadow: 4px 4px var(--primary-dark-color);
 }
 
 .sub-title {
