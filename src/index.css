@@ -140,11 +140,6 @@ iframe {
     text-shadow: 2px 2px var(--primary-dark-color);
 }
 
-.divider {
-    background-color: var(--primary-dark-color);
-    height: 3px;
-}
-
 .card-container {
     display: grid;
     max-width: min(100%, 752px);

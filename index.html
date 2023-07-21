@@ -9,14 +9,17 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch&family=Press+Start+2P&display=swap" rel="stylesheet">    
+        <script type="module" src="/src/main.ts" defer></script>
     </head>
     <body>
+        <header-component></header-component>
         <main>
+            <divider-component></divider-component>
             <div class="hero flexbox">
                 <h1 class="hero-title">Andreas Mikko</h1>
                 <p class="sub-title">Software Developer</p>
             </div>
-            <div class="divider"></div>
+            <divider-component></divider-component>
             <div class="flexbox white-section">
                 <p>
                     My name is Andreas Mikko. Software developer, Nintendo nerd and father of a little girl.
@@ -50,7 +53,7 @@
                 </p>
                 <iframe src="https://www.youtube.com/embed/lxSnahL7HVo" title="Tytte Bear Trailer"></iframe>
             </div>
-            <div class="divider"></div>
+            <divider-component></divider-component>
             <div class="flexbox white-section">
                 <p>Projects</p>
                 <div class="card-container">
@@ -72,7 +75,7 @@
                     </card-component>
                 </div>
             </div>
-            <div class="divider"></div>
+            <divider-component></divider-component>
         </main>
         <footer class="flexbox color-section">
             <address>
@@ -80,6 +83,5 @@
                 <a href="https://www.linkedin.com/in/andreas-mikko-04ab9988">LinkedIn</a>
             </address>
         </footer>
-        <script type="module" src="/src/main.ts" defer></script>
     </body>
 </html>
