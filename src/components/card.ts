@@ -61,9 +61,7 @@ a:active {
 export class Card extends HTMLElement {
     public constructor() {
         super();
-    }
 
-    public connectedCallback() {
         const shadow = this.attachShadow({ mode: "closed" });
         const node = template.content.cloneNode(true);
         shadow.appendChild(node);
