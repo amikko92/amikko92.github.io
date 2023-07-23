@@ -147,3 +147,8 @@ iframe {
     margin: 1rem;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
+
+.divider {
+    background-color: var(--primary-dark-color);
+    height: 3px;
+}
