@@ -3,13 +3,82 @@
     <head>
         <meta charset="UTF-8" />
         <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-        <link rel="stylesheet" href="index.css" />
+        
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Andreas Mikko</title>
-      <script type="module" crossorigin src="/assets/index-5d387cff.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch&family=Press+Start+2P&display=swap" rel="stylesheet">    
+        
+      <script type="module" crossorigin src="/assets/main-6da848c5.js"></script>
+      <link rel="stylesheet" href="/assets/main-0432ca00.css">
     </head>
     <body>
-        <div id="root">Hello World</div>
-        
+        <header-component></header-component>
+        <main>
+            <div class="divider"></div>
+            <div class="hero flexbox">
+                <h1 class="hero-title">Andreas Mikko</h1>
+                <p class="sub-title">Software Developer</p>
+            </div>
+            <div class="divider"></div>
+            <div class="flexbox white-section">
+                <p>
+                    My name is Andreas Mikko. Software developer, Nintendo nerd and father of a little girl.
+                </p>
+                <p>
+                    During the days, I build slot games using 
+                    <a href="https://www.typescriptlang.org/">TypeScript</a> and 
+                    <a href="https://pixijs.com/">Pixi.js</a>.
+                </p>
+                <p>Like <a href="./pages/gorilla-kingdom.html">Gorilla Kingdom</a>!</p>
+                <img src="gorilla-kingdom.webp" alt="Gorilla Kingdom" />
+            </div>
+            <div class="divider"></div>
+            <div class="flexbox color-section">
+                <p>
+                    In previous jobs I mostly programmed in
+                    <a href="https://learn.microsoft.com/en-us/dotnet/csharp/">C#</a>.
+                </p>
+                <p>
+                    I have developed cloud applications on
+                    <a href="https://azure.microsoft.com/">Azure</a>
+                    and desktop applications using
+                    <a href="https://learn.microsoft.com/en-us/dotnet/desktop/wpf/?view=netdesktop-7.0">WPF</a>.
+                </p>
+                <p>
+                    <a href="https://unity.com/">Unity</a>
+                    have long been my favorite game engine. I've used it for games like
+                    <a href="https://thunderfulgames.com/games/zombie-vikings/">Zombie Vikings</a>
+                    and 
+                    <a href="https://girongames.com/games/tytte-bear/">Tytte Bear</a>.
+                </p>
+                <iframe src="https://www.youtube.com/embed/lxSnahL7HVo" title="Tytte Bear Trailer"></iframe>
+            </div>
+            <div class="divider"></div>
+            <div class="flexbox white-section">
+                <p>Projects</p>
+                <div class="card-container">
+                    <card-component 
+                        href="./pages/gorilla-kingdom.html"
+                        src="gorilla-kingdom.webp">
+                        Gorilla Kingdom
+                    </card-component>
+                    <card-component 
+                        href="https://girongames.com/games/tytte-bear/"
+                        src="tytte-bear.webp">
+                        Tytte Bear
+                    </card-component>
+                    <card-component 
+                        href="https://thunderfulgames.com/games/zombie-vikings/" 
+                        src="zombie-vikings.webp"
+                        img-pos="30% 75%">
+                        Zombie Vikings
+                    </card-component>
+                </div>
+            </div>
+            <div class="divider"></div>
+        </main>
+        <footer-component></footer-component>
     </body>
 </html>
