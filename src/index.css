@@ -14,11 +14,7 @@
 body {
     height: 100%;
     margin: 0;
-}
-
-footer {
-    background-color: var(--primary-color);
-    min-height: 100px;
+    background-color: var(--primary-dark-color);
 }
 
 address {
