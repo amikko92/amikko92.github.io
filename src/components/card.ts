@@ -3,6 +3,7 @@ template.innerHTML = /*html*/ `
 <style>
 .card {
     max-width: 250px;
+    min-height: 100%;
     padding: 0.3rem;
     border-radius: 10px;
     box-shadow: 0 4px 8px 0 rgba(0, 99, 230, 0.4);
