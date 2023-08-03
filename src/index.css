@@ -35,15 +35,15 @@ address {
 
 h1 {
     font-family: "Chakra Petch", sans-serif;
-    color: var(--text-color);
-    font-size: 1.4em;
+    font-size: 2em;
 }
 
 p {
     font-family: "Chakra Petch", sans-serif;
-    font-size: 1.2em;
+    font-size: 1rem;
     line-height: 1.5;
-    max-width: 40ch;
+    max-width: 60ch;
+    text-align: justify;
 }
 
 a {
