@@ -134,6 +134,7 @@ iframe {
     font-family: "Press Start 2P", cursive;
     font-size: min(1.1rem, 5vw);
     text-shadow: 2px 2px var(--primary-dark-color);
+    text-align: center;
 }
 
 .card-container {
