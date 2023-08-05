@@ -7,7 +7,7 @@ template.innerHTML = /*html*/ `
     justify-content: flex-start;
 }
 
-.nav-bar {
+#nav-bar {
     display: block;
     margin: 1em;
 }
@@ -32,6 +32,18 @@ button:active {
     margin: 0.3em;
 }
 
+#nav-menu {
+    display: none;
+}
+
+ul {
+    list-style-type: none;
+}
+
+li {
+    margin: 0.5em;
+}
+
 @media (max-width: 700px) {
     .header-bar {
         display: flex;
@@ -39,7 +51,7 @@ button:active {
         justify-content: space-between;
     }
 
-    .nav-bar {
+    #nav-bar {
         display: none;
     }
 
@@ -89,24 +101,47 @@ a:active {
             <div>Andreas</div>
             <div>Mikko</div>
         </a>
-        <nav class="nav-bar">
+        <nav id="nav-bar">
             <a href="/">Home</a>
             <a href="/projects/">Projects</a>
             <a href="/about/">About</a>
             <a href="/contact/">Contact</a>
         </nav>
-        <button>
+        <button type="button">
             <img class="menu-icon" src="/assets/menu-icon.svg"/>
         </button>
     </div>
+    <nav id="nav-menu">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/projects/">Projects</a></li>
+            <li><a href="/about/">About</a></li>
+            <li><a href="/contact/">Contact</a></li>
+        </ul>
+    </nav>
 </header>
 `;
 
 export class Header extends HTMLElement {
     public constructor() {
         super();
-        const shadow = this.attachShadow({ mode: "closed" });
+        const shadow = this.attachShadow({ mode: "open" });
         const node = template.content.cloneNode(true);
         shadow.appendChild(node);
+    }
+
+    public connectedCallback(): void {
+        const menuButton = this.shadowRoot?.querySelector("button");
+        const navMenu = this.shadowRoot?.getElementById("nav-menu");
+        if (menuButton && navMenu) {
+            menuButton.onclick = () => {
+                const navMenuDisplay = window.getComputedStyle(navMenu).display;
+                if (navMenuDisplay === "none") {
+                    navMenu.style.display = "block";
+                } else {
+                    navMenu.style.display = "none";
+                }
+            };
+        }
     }
 }
