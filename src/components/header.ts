@@ -1,14 +1,51 @@
 const template = document.createElement("template");
 template.innerHTML = /*html*/ `
 <style>
-header {
+.header-bar {
     display: flex;
     background-color: var(--primary-color);
-    align-items: center;
+    justify-content: flex-start;
 }
 
-nav {
+.nav-bar {
+    display: block;
     margin: 1em;
+}
+
+button {
+    background: var(--primary-color);
+    border-style: none;
+    border-radius: 10px;
+}
+
+button:hover {
+    background: var(--primary-light-color);
+}
+
+button:active {
+    background: var(--primary-dark-color);
+}
+
+.menu-icon {
+    display: none;
+    max-width: 2rem;
+    margin: 0.3em;
+}
+
+@media (max-width: 700px) {
+    .header-bar {
+        display: flex;
+        background-color: var(--primary-color);
+        justify-content: space-between;
+    }
+
+    .nav-bar {
+        display: none;
+    }
+
+    .menu-icon {
+        display: block;
+    }
 }
 
 a {
@@ -47,16 +84,21 @@ a:active {
 </style>
 
 <header>
-    <a class="logo" href="/">
-        <div>Andreas</div>
-        <div>Mikko</div>
-    </a>
-    <nav>
-        <a href="/">Home</a>
-        <a href="/projects/">Projects</a>
-        <a href="/about/">About</a>
-        <a href="/contact/">Contact</a>
-    </nav>
+    <div class="header-bar">
+        <a class="logo" href="/">
+            <div>Andreas</div>
+            <div>Mikko</div>
+        </a>
+        <nav class="nav-bar">
+            <a href="/">Home</a>
+            <a href="/projects/">Projects</a>
+            <a href="/about/">About</a>
+            <a href="/contact/">Contact</a>
+        </nav>
+        <button>
+            <img class="menu-icon" src="/assets/menu-icon.svg"/>
+        </button>
+    </div>
 </header>
 `;
 
