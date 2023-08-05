@@ -13,6 +13,7 @@ template.innerHTML = /*html*/ `
 }
 
 button {
+    display: none;
     background: var(--primary-color);
     border-style: none;
     border-radius: 10px;
@@ -27,7 +28,6 @@ button:active {
 }
 
 .menu-icon {
-    display: none;
     max-width: 2rem;
     margin: 0.3em;
 }
@@ -59,7 +59,7 @@ li {
         display: none;
     }
 
-    .menu-icon {
+    button {
         display: block;
     }
 }
@@ -143,6 +143,13 @@ export class Header extends HTMLElement {
                 if (navMenuDisplay === "none") {
                     navMenu.style.display = "block";
                 } else {
+                    navMenu.style.display = "none";
+                }
+            };
+
+            window.onresize = () => {
+                const navMenuDisplay = window.getComputedStyle(navMenu).display;
+                if (navMenuDisplay === "block" && window.innerWidth > 700) {
                     navMenu.style.display = "none";
                 }
             };
