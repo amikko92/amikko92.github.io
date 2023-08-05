@@ -34,10 +34,14 @@ button:active {
 
 #nav-menu {
     display: none;
+    background: hsl(214, 100%, 30%);
+    margin: 1px;
+    padding: 1em;
 }
 
 ul {
     list-style-type: none;
+    margin: 0;
 }
 
 li {
@@ -77,12 +81,12 @@ a:visited {
 
 a:hover {
     color: white;
-    background: var(--primary-dark-color);
+    background: var(--primary-light-color);
 }
 
 a:active {
     color: white;
-    background: var(--primary-light-color);
+    background: var(--primary-dark-color);
 }
 
 .logo {
