@@ -14,9 +14,10 @@ const fileNameToKey = (fileName: string): string => {
 
 export const getPageInput = (path: string): PageInput => {
     const pageFiles = readdirSync(path);
+    const folderName = path.split("/").at(-1);
     const input: PageInput = {};
     for (const pageFile of pageFiles) {
-        const key = fileNameToKey(pageFile);
+        const key = `${folderName}-${fileNameToKey(pageFile)}`;
         const pagePath = resolve(path, pageFile);
         input[key] = pagePath;
     }
